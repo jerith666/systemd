@@ -167,7 +167,15 @@ int generator_write_fsck_deps(
                 else if (r == 0) {
                         /* treat missing check as essentially OK */
                         log_debug("Checking was requested for %s, but fsck.%s does not exist.", what, fstype);
-                        return 0;
+                        /* this is hard to avoid on nixos, since
+                           systemd doesn't know to search the nix
+                           store for fsck binaries, and
+                           /run/current-system/sw/bin isn't linked
+                           when systemd-fsck-generator
+                           runs. therefore, don't return, but continue
+                           to create the Requires/After links in the
+                           mount unit.*/
+                        //return 0;
                 }
         }
 
